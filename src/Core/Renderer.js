@@ -27,6 +27,8 @@ class Renderer {
     onSizeChanged(width, height) {
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.render();
     }
 
     render() {

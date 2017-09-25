@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import MainCanvas from 'Components/MainCanvas'
+import App from 'Components/App'
 
 new Vue({
-    el: '#main-div',
-    render: h => h(MainCanvas)
+    el: '#vue-app',
+    render: h => h(App)
 })

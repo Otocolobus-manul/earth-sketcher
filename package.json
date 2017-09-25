@@ -1,7 +1,8 @@
 {
 	"dependencies": {
 		"three": "*",
-		"vue": "2.x"
+		"vue": "2.x",
+		"vue-resize-directive": "^1.0.0"
 	},
 	"devDependencies": {
 		"babel-core": "^6.22.1",
