@@ -5,8 +5,9 @@ import renderTarget from './RenderTargets';
 
 class Renderer {
     constructor(canvas, width, height) {
-        this.renderer = new Three.WebGLRenderer({canvas: canvas});
+        this.renderer = new Three.WebGLRenderer({canvas: canvas, antialias: true});
         this.renderer.setSize(width, height);
+        this.renderer.setClearColor(0xffffff, 1);
         this.camera = new Three.PerspectiveCamera(45, width / height, 1.0, 1000.0);
         this.camera.position.x = -100.0;
         this.camera.position.y = -100.0;
@@ -29,7 +30,6 @@ class Renderer {
     }
 
     render() {
-        requestAnimationFrame(() => this.render());
         this.renderer.render(this.scene, this.camera);
     }
 }

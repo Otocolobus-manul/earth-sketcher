@@ -7,7 +7,7 @@ class Axis {
         this.scene = scene;
         this.camera = camera;
         this.material = new Three.LineBasicMaterial({
-            color: 0x888888
+            color: 0xaaaaaa
         });
         this.geometry = new Three.Geometry();
         this.issues = [];
