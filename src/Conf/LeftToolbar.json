@@ -1,0 +1,12 @@
+{
+    "Grab": {
+        "Name": "grab",
+        "Description": "拖动画布",
+        "Cursor": "grab"
+    },
+    "Select": {
+        "Name": "select",
+        "Description": "选择",
+        "Cursor": "crosshair"
+    }
+}

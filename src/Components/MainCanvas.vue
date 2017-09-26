@@ -32,7 +32,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #main-canvas {
     position: absolute;
     width: 100%;
