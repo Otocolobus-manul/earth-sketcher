@@ -24,11 +24,23 @@ class Renderer {
         }
     }
 
-    onSizeChanged(width, height) {
+    applySizeChange(width, height) {
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.render();
+    }
+
+    applyLookatMove(lastX, lastY, nowX, nowY) {
+        var dx = nowX - lastX, dy = nowY - lastY;
+        var t = new Three.Vector4(dx, dy, -1.0, 1.0).applyMatrix4(this.camera.matrixWorldInverse);
+        this.camera.position.add(new Three.Vector3(t.x / t.w, t.y / t.w, t.z / t.w));
+        this.camera.updateProjectionMatrix();
+        this.render();
+    }
+
+    applyCameraMove(lastX, lastY, nowX, nowY) {
+
     }
 
     render() {

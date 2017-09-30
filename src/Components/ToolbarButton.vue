@@ -5,20 +5,19 @@
 </template>
 
 <script>
-import Store from 'Store';
 
 export default {
     name: 'toolbar-button',
     props: ['buttonText', 'event'],
     computed: {
         isChoosed: function() {
-            return this.event == Store.LeftToolbarSelected;
+            return this.event == this.$store.state.leftToolbarSelected;
         }
     },
     methods: {
         onClick: function() {
-            if (!Store.buttonBanned)
-                Store.LeftToolbarSelected = this.event;
+            if (!this.$store.state.buttonBanned)
+                this.$store.setLeftToolbarSelected(this.event);
         }
     }
 }
