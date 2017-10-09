@@ -17,7 +17,7 @@ export default {
     methods: {
         onClick: function() {
             if (!this.$store.state.buttonBanned)
-                this.$store.setLeftToolbarSelected(this.event);
+                this.$store.commit('setLeftToolbarSelected', this.event);
         }
     }
 }

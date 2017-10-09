@@ -1,5 +1,5 @@
 <template>
-<canvas id="main-canvas" v-on="{ mousedown: onMouseDown, mousemove: onMouseMove, mouseup: onMouseUp, keydown: onKeyDown, keyup: onKeyUp }"></canvas>
+<canvas id="main-canvas" v-on="{ mousedown: onMouseDown, mousemove: onMouseMove, mouseup: onMouseUp }"></canvas>
 </template>
 
 <script>
@@ -14,17 +14,18 @@ export default {
     data: () => ({
         renderer: null,
         keyPressed: new Set(),
+        mouseDown: false,
         operationHandler: [
             {
                 signal: LeftToolbarConf.Grab,
                 keyboardFilter: [32],  // space
-                onMouseMove: () => {
+                onMouseMove: function() {
                     this.renderer.applyLookatMove(this.lastX, this.lastY, this.nowX, this.nowY);
                 }
             },
             {
                 signal: LeftToolbarConf.Grab,
-                onMouseMove: () => {
+                onMouseMove: function() {
                     this.renderer.applyCameraMove(this.lastX, this.lastY, this.nowX, this.nowY);
                 }
             }
@@ -35,6 +36,14 @@ export default {
 
     created: function() {
         this.currentOperation = this.operationHandler[1];
+        window.onkeydown = (function(e) {
+            this.keyPressed.add(e.keyCode);
+            this.determineCurrentOperation();
+        }).bind(this);
+        window.onkeyup = (function(e) {
+            this.keyPressed.delete(e.keyCode);
+            this.determineCurrentOperation();
+        }).bind(this);
     },
 
     computed: {
@@ -47,7 +56,7 @@ export default {
                 this.renderer.render();
         },
         leftToolbarSelected: function() {
-            determineCurrentOperation();
+            this.determineCurrentOperation();
         }
     },
 
@@ -57,50 +66,44 @@ export default {
             this.renderer.applySizeChange(window.innerWidth, window.innerHeight);
         });
         this.$store.commit('emitRefresh');
-        this.needsRefresh = true;
     },
 
     methods: {
         determineCurrentOperation() {
-            for (i of this.operationHandler) {
+            for (var i of this.operationHandler) {
                 if (i.signal == this.leftToolbarSelected && (
                     !i.keyboardFilter || i.keyboardFilter.every(e => this.keyPressed.has(e)))) {
                     this.currentOperation = i;
-                    break;
+                    return;
                 }
             }
-        },
-
-        onKeyDown: function(e) {
-            keyPressed.add(e.keyCode);
-            determineCurrentOperation();
-        },
-
-        onKeyUp: function(e) {
-            keyPressed.delete(e.keyCode);
-            determineCurrentOperation();
+            this.currentOperation = null;
         },
 
         onMouseDown: function(e) {
             this.$store.commit('banButton', true);
             this.originX = this.lastX = this.nowX = e.clientX;
             this.originY = this.lastY = this.nowY = e.clientY;
-            if (this.renderer && this.currentOperation.onMouseDown)
-                this.currentOperation.onMouseDown();
+            this.mouseDown = true;
+            if (this.renderer && this.currentOperation && this.currentOperation.onMouseDown)
+                this.currentOperation.onMouseDown.call(this);
         },
 
         onMouseMove: function(e) {
-            this.lastX = this.nowX;
-            this.lastY = this.nowY;
-            this.nowX = e.clientX;
-            this.nowY = e.clientY;
-            if (this.renderer && this.currentOperation.onMouseMove)
-                this.currentOperation.onMouseMove();
+            if (this.mouseDown && this.currentOperation) {
+                this.lastX = this.nowX;
+                this.lastY = this.nowY;
+                this.nowX = e.clientX;
+                this.nowY = e.clientY;
+                if (this.renderer && this.currentOperation.onMouseMove)
+                    this.currentOperation.onMouseMove.call(this);
+            }
         },
 
         onMouseUp: function(e) {
-            if (this.renderer && this.currentOperation.onMouseDown)
-                this.currentOperation.onMouseDown();
+            this.mouseDown = false;
+            if (this.renderer && this.currentOperation && this.currentOperation.onMouseDown)
+                this.currentOperation.onMouseDown.call(this);
             this.$store.commit('banButton', false);
         }
     }
