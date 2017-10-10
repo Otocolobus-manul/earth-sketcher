@@ -5,6 +5,8 @@ import renderTarget from './RenderTargets';
 
 class Renderer {
     constructor(canvas, width, height) {
+        this.width = width;
+        this.height = height;
         this.renderer = new Three.WebGLRenderer({canvas: canvas, antialias: true});
         this.renderer.setSize(width, height);
         this.renderer.setClearColor(0xffffff, 1);
@@ -25,6 +27,8 @@ class Renderer {
     }
 
     applySizeChange(width, height) {
+        this.width = width;
+        this.height = height;
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
@@ -32,15 +36,21 @@ class Renderer {
     }
 
     applyLookatMove(lastX, lastY, nowX, nowY) {
-        var dx = nowX - lastX, dy = nowY - lastY;
-        var t = new Three.Vector4(dx, dy, -1.0, 1.0).applyMatrix4(this.camera.matrixWorldInverse);
-        this.camera.position.add(new Three.Vector3(t.x / t.w, t.y / t.w, t.z / t.w));
+        var quaternion = new Three.Quaternion();
+        quaternion.setFromEuler(new Three.Euler(0.0, 0.0, (nowX - lastX) * 0.002));
+        this.camera.quaternion.multiplyQuaternions(quaternion, this.camera.quaternion);
+        //this.camera.rotateOnAxis(new Three.Vector3(0, 1, 0), (nowX - lastX) * 0.002);
+        this.camera.rotateOnAxis(new Three.Vector3(1, 0, 0), (nowY - lastY) * 0.002);
         this.camera.updateProjectionMatrix();
         this.render();
     }
 
     applyCameraMove(lastX, lastY, nowX, nowY) {
-
+        var dx = nowX - lastX, dy = nowY - lastY;
+        this.camera.translateX(-dx);
+        this.camera.translateY(dy);
+        this.camera.updateProjectionMatrix();
+        this.render();
     }
 
     render() {
