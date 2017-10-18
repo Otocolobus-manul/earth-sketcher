@@ -1,42 +1,10 @@
 'use strict';
 
 import * as Three from 'three';
-import Constants from './Constants'
+import Constants from './DSA/Constants'
+import Algo from './DSA/GeometryAlgo'
 
 var lineMaterial = new Three.LineBasicMaterial({ color: 0x000, linewidth: 3, transparent: true });
-
-// Get the intersection point of the ray ant the xy plane.
-function rayCrossGround(ray) {
-    if (ray.direction.z == 0) {
-        if (ray.origin.z == 0)
-            return ray.origin;
-        else
-            return null;
-    } else {
-        var k = -ray.origin.z / ray.direction.z;
-        if (k >= 0 && k < Constants.maxCanvasSize)
-            return ray.origin.add(ray.direction.multiply(k)).
-                clamp(-Constants.maxCanvasSize, Constants.maxCanvasSize);
-        else
-            return null;
-    }
-}
-
-// Given a pair of skew lines, get the point on line 1 that is nearest to line 2.
-// two line is given by:
-// line1: p1 + t1 * d1
-// line2: p2 + t2 * d2
-// return t1 of the correspondent point.
-function linePairNearestPoint(p1, d1, p2, d2) {
-    var n = new Three.Vector3();
-    n.crossVectors(d1, d2);
-    if (n.length < Constants.eps)
-        return p1;
-    n.crossVectors(d2, n);
-    var interm = new Three.Vector3();
-    interm.subVectors(p2, p1);
-    return interm.dot(n) / d1.dot(n);
-}
 
 function xyPlaneFillBuffer(buffer, p1, p2) {
     buffer[0]  = p1.x;
@@ -66,7 +34,7 @@ class XYPlaneCreator {
     click1(x, y) {
         var raycaster = this.rectPlanes.raycast(x, y);
         var ray = raycaster.ray;
-        var crossPoint = rayCrossGround(ray);
+        var crossPoint = Algo.rayCrossGround(ray);
         if (crossPoint == null)
             return false;
         this.click1Pos = crossPoint;
@@ -77,7 +45,7 @@ class XYPlaneCreator {
     move1(x, y) {
         var raycaster = this.rectPlanes.raycast(x, y);
         var ray = raycaster.ray;
-        var crossPoint = rayCrossGround(ray);
+        var crossPoint = Algo.rayCrossGround(ray);
         if (crossPoint != null) {
             this.click2Pos = crossPoint;
             xyPlaneFillBuffer(this.geometry.attributes.position, this.click1Pos, this.click2Pos);
@@ -91,7 +59,7 @@ class XYPlaneCreator {
         var raycaster = this.rectPlanes.raycast(x, y);
         var ray = raycaster.ray;
         var vecZ = Constants.vecZ;
-        var crossPoint = linePairNearestPoint(this.click2Pos, vecZ, ray.origin, ray.direction);
+        var crossPoint = Algo.linePairNearestPoint(this.click2Pos, vecZ, ray.origin, ray.direction);
         vecZ.multiplyScalar(crossPoint);
         var p1 = new Three.Vector3(), p2 = new Three.Vector3();
         p1.addVectors(this.click1Pos, vecZ);
