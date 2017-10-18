@@ -3,7 +3,7 @@ import LeftToolbarConf from 'Conf/LeftToolbar';
 var CAMERA_MOVE = 0, LOOKAT_MOVE = 1;
 export default function(register, renderer) {
     register({
-        signal: LeftToolbarConf.Grab,
+        signal: LeftToolbarConf.grab,
         initialStatus: CAMERA_MOVE,
         data: {
             originX: 0, originY: 0, lastX: 0, lastY: 0, nowX: 0, nowY: 0, mouseDown: false,

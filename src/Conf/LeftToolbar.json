@@ -1,12 +1,17 @@
 {
-    "Grab": {
-        "Name": "grab",
-        "Description": "拖动画布",
-        "Cursor": "grab"
+    "grab": {
+        "name": "grab",
+        "description": "拖动画布",
+        "cursor": "grab"
     },
-    "Select": {
-        "Name": "select",
-        "Description": "选择",
-        "Cursor": "crosshair"
+    "select": {
+        "name": "select",
+        "description": "选择",
+        "cursor": "crosshair"
+    },
+    "segment": {
+        "name": "segment",
+        "description": "绘制线段",
+        "cursor": "crosshair"
     }
 }

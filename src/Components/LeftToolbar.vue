@@ -3,8 +3,9 @@
     <div class="toolbar-top">
         <div class="hidden-show-button"><i class="material-icons">chevron_left</i></div>
     </div>
-    <toolbar-button :event="Conf.Grab" :button-text="Conf.Grab.Description"></toolbar-button>
-    <toolbar-button :event="Conf.Select" :button-text="Conf.Select.Description"></toolbar-button>
+    <toolbar-button :event="Conf.grab" :button-text="Conf.grab.description"></toolbar-button>
+    <toolbar-button :event="Conf.select" :button-text="Conf.select.description"></toolbar-button>
+    <toolbar-button :event="Conf.segment" :button-text="Conf.segment.description"></toolbar-button>
 </div>
 </template>
 
