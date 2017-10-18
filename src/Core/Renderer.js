@@ -18,12 +18,19 @@ class Renderer {
         this.camera.up.y = 0.0;
         this.camera.up.z = 1.0;
         this.camera.lookAt(new Three.Vector3(0.0, 0.0, 0.0));
+        this.raycaster = new Three.Raycaster();
         this.scene = new Three.Scene();
-        this.issue = [];
+        this.issue = {};
         for (var x of renderTarget) {
             var current = require('./' + x);
-            this.issue.push(new current.default(this.scene, this.camera));
+            this.issue.x = new current.default(this);
         }
+    }
+
+    raycast(x, y) {
+        var mouse = new Three.Vector2(x / this.width * 2 - 1, y / this.height * 2 - 1);
+        this.raycaster.setFromCamera(mouse, camera);
+        return this.raycaster;
     }
 
     applySizeChange(width, height) {

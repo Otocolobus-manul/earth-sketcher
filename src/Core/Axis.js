@@ -3,9 +3,9 @@
 import * as Three from 'three';
 
 class Axis {
-    constructor(scene, camera) {
-        this.scene = scene;
-        this.camera = camera;
+    constructor(renderer) {
+        this.scene = renderer.scene;
+        this.camera = renderer.camera;
         this.material = new Three.LineBasicMaterial({
             color: 0xaaaaaa
         });
@@ -21,7 +21,7 @@ class Axis {
                 new Three.Vector3(1000.0, i * 10.0, 0.0));
         }
         this.renderTarget = new Three.LineSegments(this.geometry, this.material);
-        scene.add(this.renderTarget);
+        this.scene.add(this.renderTarget);
     }
 }
 
