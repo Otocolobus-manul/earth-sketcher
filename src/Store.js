@@ -13,7 +13,7 @@ export default new Vuex.Store({
         buttonBanned: false,
     },
     mutations: {
-        emitRefresh: state => state.needsRefresh = true,
+        emitRefresh: state => state.needsRefresh = !state.needsRefresh,
         setLeftToolbarSelected: (state, x) => state.leftToolbarSelected = x,
         banButton: (state, x) => state.buttonBanned = x
     },

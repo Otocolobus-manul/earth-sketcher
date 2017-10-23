@@ -1,12 +1,13 @@
+import * as Three from 'three'
 import Constants from './Constants'
 
-export default {
-    function copyVec3(Vector3 v) {
-        return new Vector3(v.x, v.y, v.z);
+export default class{
+    static copyVec3(v) {
+        return new Three.Vector3(v.x, v.y, v.z);
     }
 
     // Get the intersection point of the ray ant the xy plane.
-    function rayCrossGround(ray) {
+    static rayCrossGround(ray) {
         if (ray.direction.z == 0) {
             if (ray.origin.z == 0)
                 return ray.origin;
@@ -15,8 +16,8 @@ export default {
         } else {
             var k = -ray.origin.z / ray.direction.z;
             if (k >= 0 && k < Constants.maxCanvasSize)
-                return copyVec3(ray.origin).addScaledVector(ray.direction, k).
-                    clamp(-Constants.maxCanvasSize, Constants.maxCanvasSize);
+                return this.copyVec3(ray.origin).addScaledVector(ray.direction, k).
+                    clampScalar(-Constants.maxCanvasSize, Constants.maxCanvasSize);
             else
                 return null;
         }
@@ -27,7 +28,7 @@ export default {
     // line1: p1 + t1 * d1
     // line2: p2 + t2 * d2
     // return t1 of the correspondent point.
-    function linePairNearestPoint(p1, d1, p2, d2) {
+    static linePairNearestPoint(p1, d1, p2, d2) {
         var n = new Three.Vector3().crossVectors(d1, d2);
         if (n.length < Constants.eps)
             return p1;

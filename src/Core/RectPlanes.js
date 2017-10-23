@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Three from 'three';
 import Constants from './DSA/Constants'
 import Algo from './DSA/GeometryAlgo'

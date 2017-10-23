@@ -1,6 +1,6 @@
 import LeftToolbarConf from 'Conf/LeftToolbar';
 
-var CAMERA_MOVE = 0, LOOKAT_MOVE = 1;
+const CAMERA_MOVE = 0, LOOKAT_MOVE = 1;
 export default function(register, renderer) {
     register({
         signal: LeftToolbarConf.grab,

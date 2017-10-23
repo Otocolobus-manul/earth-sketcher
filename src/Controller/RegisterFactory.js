@@ -48,13 +48,14 @@ export default class {
             }).bind(this),
             on: (function(type, e) {
                 if (this.currentIssue) {
+                    var handler;
                     try {
-                        this.currentIssue.handler.get(this.currentIssue.context.status)[type](e);
+                        handler = this.currentIssue.handler.get(this.currentIssue.context.status)[type];
                     }
                     catch(err) {
-                        var handler = this.currentIssue.defaultHandler[type];
-                        if (handler) handler(e);
+                        handler = this.currentIssue.defaultHandler[type];
                     }
+                    if (handler) handler(e);
                 }
             }).bind(this)
         };
