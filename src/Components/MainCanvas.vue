@@ -36,6 +36,7 @@ export default {
         window.addEventListener('resize', () => {
             this.renderer.applySizeChange(window.innerWidth, window.innerHeight);
         });
+        require('mouse-wheel')(window, (dx, dy, dz, e) => this.on('wheel', [dx, dy, dz, e]), true);
         this.$store.commit('emitRefresh');
     },
 

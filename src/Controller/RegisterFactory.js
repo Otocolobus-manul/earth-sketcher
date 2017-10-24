@@ -12,7 +12,8 @@
  *             [status],
  *             [mouseDown],
  *             [mouseMove],
- *             [mouseUp]
+ *             [mouseUp],
+ *             [wheel]
  *         }
  *     })
  *
@@ -91,6 +92,8 @@ export default class {
                     curHandler.mouseMove = x.mouseMove.bind(context);
                 if (x.mouseUp)
                     curHandler.mouseUp = x.mouseUp.bind(context);
+                if (x.wheel)
+                    curHandler.wheel = x.wheel.bind(context);
                 if (x.status)
                     currentIssue.handler.set(x.status, curHandler);
                 else

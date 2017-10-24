@@ -1,6 +1,7 @@
 {
 	"dependencies": {
 		"less": "^2.7.2",
+		"mouse-wheel": "^1.2.0",
 		"mousetrap": "^1.6.1",
 		"three": "*",
 		"vue": "2.x",

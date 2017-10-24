@@ -60,6 +60,13 @@ class Renderer {
         this.render();
     }
 
+    applyMouseWheel(deltaPixel, x, y) {
+        var ray = this.raycast(x, y).ray;
+        this.camera.position.addScaledVector(ray.direction, deltaPixel / 10.0);
+        this.camera.updateProjectionMatrix();
+        this.render();
+    }
+
     render() {
         this.renderer.render(this.scene, this.camera);
     }

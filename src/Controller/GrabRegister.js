@@ -45,6 +45,10 @@ export default function(register, renderer) {
                         this.nowY = e.clientY;
                         this.operations[this.status].call(this);
                     }
+                },
+                wheel: function(e) {
+                    let [dx, dy, dz, e_] = e;
+                    renderer.applyMouseWheel(-dy, e_.clientX, renderer.height - e_.clientY);
                 }
             }
         ]
