@@ -126,6 +126,7 @@ class ObjectManager {
             geometry.addAttribute(name,
                 new Three.BufferAttribute(new Float32Array(this.blockSize * itemSize), itemSize));
         let obj = new this.geoType(geometry, [this.material]);
+        obj.frustumCulled = false;
         this.scene.add(obj);
         if (this.blockNum == this.bufs.length)
             this.bufs.push(new BufferManager(geometry, obj, this));
