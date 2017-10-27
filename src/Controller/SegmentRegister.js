@@ -11,6 +11,10 @@ export default function(register, renderer) {
         handler: [
             {
                 status: CLICK0,
+                mouseMove: function(e) {
+                    renderer.issue.Segment.move0(e.clientX, renderer.height - e.clientY);
+                    this.$store.commit('emitRefresh');
+                },
                 mouseDown: function(e) {
                     this.$store.commit('banButton', true);
                     if (renderer.issue.Segment.click1(e.clientX, renderer.height - e.clientY)) {

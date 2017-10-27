@@ -1,8 +1,9 @@
 import * as Three from 'three';
 import Algo from './DSA/GeometryAlgo';
 import ObjectManager from './Gl/ObjectManager'
+import {globalKeyPoints} from './DSA/KeyPoints'
 
-var lineMaterial = new Three.LineBasicMaterial({ color: 0x000, linewidth: 3 });
+const lineMaterial = new Three.LineBasicMaterial({ color: 0x000, linewidth: 3 });
 
 function fillBuffer(buffer, p1, p2) {
     buffer[0] = p1.x;
@@ -24,24 +25,39 @@ class Segment {
         this.drawingBuf = new Float32Array(6);
         this.drawingGeo.addAttribute('position', new Three.BufferAttribute(this.drawingBuf, 3));
         this.drawing = new Three.LineSegments(this.drawingGeo, lineMaterial);
+        this.drawing.visible = false;
+        this.scene.add(this.drawing);
         this.lines = new ObjectManager(this.scene, Three.LineSegments, lineMaterial, 0, 'position', 3);
     }
 
+    getPoint(x, y) {
+        this.renderer.issue.AuxObjects.clearKeyPoint();
+        var ray = this.renderer.raycast(x, y).ray;
+        var [minDist, point] = globalKeyPoints.findNearest(ray);
+        if (minDist < 0.1) {
+            this.renderer.issue.AuxObjects.addKeyPoint(point);
+            return point;
+        }
+        return Algo.rayCrossGround(ray);
+    }
+
+    move0(x, y) {
+        this.getPoint(x, y);
+    }
+
     click1(x, y) {
-        var raycaster = this.renderer.raycast(x, y);
-        var crossPoint = Algo.rayCrossGround(raycaster.ray);
+        var crossPoint = this.getPoint(x, y);
         if (crossPoint == null)
             return false;
         this.click1Pos = crossPoint;
         fillBuffer(this.drawingBuf, this.click1Pos, this.click1Pos);
         this.drawingGeo.attributes.position.needsUpdate = true;
-        this.scene.add(this.drawing);
+        this.drawing.visible = true;
         return true;
     }
 
     move(x, y) {
-        var raycaster = this.renderer.raycast(x, y);
-        var crossPoint = Algo.rayCrossGround(raycaster.ray);
+        var crossPoint = this.getPoint(x, y);
         if (crossPoint != null) {
             this.click2Pos = crossPoint;
             fillBuffer(this.drawingBuf, this.click1Pos, this.click2Pos);
@@ -51,8 +67,11 @@ class Segment {
     }
 
     click2() {
+        this.renderer.issue.AuxObjects.clearKeyPoint();
+        globalKeyPoints.add(this.click1Pos);
+        globalKeyPoints.add(this.click2Pos);
         this.lines.push(2, 'position', this.drawingBuf);
-        this.scene.remove(this.drawing);
+        this.drawing.visible = false;
         return true;
     }
 }
