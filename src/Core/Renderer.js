@@ -19,6 +19,9 @@ class Renderer {
         this.camera.up.z = 1.0;
         this.camera.lookAt(new Three.Vector3(0.0, 0.0, 0.0));
         this.raycaster = new Three.Raycaster();
+        this.frustum = new Three.Frustum();
+        this.frustum.setFromMatrix(new Three.Matrix4().multiplyMatrices(
+            this.camera.projectionMatrix, this.camera.matrixWorldInverse));
         this.scene = new Three.Scene();
         this.issue = {};
         for (var x of renderTarget) {
@@ -31,6 +34,12 @@ class Renderer {
         var mouse = new Three.Vector2(x / this.width * 2 - 1, y / this.height * 2 - 1);
         this.raycaster.setFromCamera(mouse, this.camera);
         return this.raycaster;
+    }
+
+    __updateCamera() {
+        this.camera.updateProjectionMatrix();
+        this.frustum.setFromMatrix(new Three.Matrix4().multiplyMatrices(
+            this.camera.projectionMatrix, this.camera.matrixWorldInverse));
     }
 
     applySizeChange(width, height) {
@@ -48,7 +57,7 @@ class Renderer {
         this.camera.quaternion.multiplyQuaternions(quaternion, this.camera.quaternion);
         //this.camera.rotateOnAxis(new Three.Vector3(0, 1, 0), (nowX - lastX) * 0.002);
         this.camera.rotateOnAxis(new Three.Vector3(1, 0, 0), (nowY - lastY) * 0.002);
-        this.camera.updateProjectionMatrix();
+        this.__updateCamera();
         this.render();
     }
 
@@ -56,14 +65,14 @@ class Renderer {
         var dx = nowX - lastX, dy = nowY - lastY;
         this.camera.translateX(-dx);
         this.camera.translateY(dy);
-        this.camera.updateProjectionMatrix();
+        this.__updateCamera();
         this.render();
     }
 
     applyMouseWheel(deltaPixel, x, y) {
         var ray = this.raycast(x, y).ray;
         this.camera.position.addScaledVector(ray.direction, deltaPixel / 10.0);
-        this.camera.updateProjectionMatrix();
+        this.__updateCamera();
         this.render();
     }
 

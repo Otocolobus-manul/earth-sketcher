@@ -14,7 +14,7 @@ export default class{
             else
                 return null;
         } else {
-            var k = -ray.origin.z / ray.direction.z;
+            let k = -ray.origin.z / ray.direction.z;
             if (k >= 0 && k < Constants.maxCanvasSize)
                 return this.copyVec3(ray.origin).addScaledVector(ray.direction, k).
                     clampScalar(-Constants.maxCanvasSize, Constants.maxCanvasSize);
@@ -29,11 +29,18 @@ export default class{
     // line2: p2 + t2 * d2
     // return t1 of the correspondent point.
     static linePairNearestPoint(p1, d1, p2, d2) {
-        var n = new Three.Vector3().crossVectors(d1, d2);
+        let n = new Three.Vector3().crossVectors(d1, d2);
         if (n.length < Constants.eps)
             return p1;
         n.crossVectors(d2, n);
-        var interm = new Three.Vector3().subVectors(p2, p1);
+        let interm = new Three.Vector3().subVectors(p2, p1);
         return interm.dot(n) / d1.dot(n);
+    }
+
+    // Check whether the segment is inside the frustum.
+    static segmentInsideFrustum(line, frustum) {
+        if (frustum.containsPoint(line.start) || frustum.containsPoint(line.end))
+            return true;
+        return false;
     }
 }
